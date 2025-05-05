@@ -41,7 +41,7 @@ app.get('/api/community', (req, res) => {
 
   sql += ' ORDER BY created_at DESC';
 
-  db.query(sql, params, (err, results) => {
+  connection.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
@@ -63,7 +63,7 @@ app.get('/api/housing', (req, res) => {
 
   sql += ' ORDER BY created_at DESC';
 
-  db.query(sql, params, (err, results) => {
+  connection.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching housing items:', err);
       res.status(500).send('Database error');
@@ -85,7 +85,7 @@ app.get('/api/job', (req, res) => {
 
   sql += ' ORDER BY created_at DESC';
 
-  db.query(sql, params, (err, results) => {
+  connection.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching job items:', err);
       res.status(500).send('Database error');
@@ -107,7 +107,7 @@ app.get('/api/forsale', (req, res) => {
 
   sql += ' ORDER BY created_at DESC';
 
-  db.query(sql, params, (err, results) => {
+  connection.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching forsale items:', err);
       res.status(500).send('Database error');
@@ -129,7 +129,7 @@ app.get('/api/service', (req, res) => {
 
   sql += ' ORDER BY created_at DESC';
 
-  db.query(sql, params, (err, results) => {
+  connection.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching service items:', err);
       res.status(500).send('Database error');
