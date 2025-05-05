@@ -30,18 +30,18 @@ app.get('/test-connection', (req, res) => {
 });
 
 app.get('/api/community', (req, res) => {
-  db.query('SELECT * FROM community_items ORDER BY created_at DESC', (err, results) => {
-    if (err) {
-      console.error('Error fetching community items:', err);
-      res.status(500).send('Database error');
-    } else {
-      res.json(results);
-    }
-  });
-});
+  const category = req.query.category;
+  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM community_items';
+  let params = [];
 
-app.get('/api/forsale', (req, res) => {
-  db.query('SELECT * FROM forsale_items ORDER BY created_at DESC', (err, results) => {
+  if (category && category !== 'All') {
+    sql += ' WHERE category = ?';
+    params.push(category);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
@@ -52,9 +52,20 @@ app.get('/api/forsale', (req, res) => {
 });
 
 app.get('/api/housing', (req, res) => {
-  db.query('SELECT * FROM housing_items ORDER BY created_at DESC', (err, results) => {
+  const category = req.query.category;
+  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM housing_items';
+  let params = [];
+
+  if (category && category !== 'All') {
+    sql += ' WHERE category = ?';
+    params.push(category);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, params, (err, results) => {
     if (err) {
-      console.error('Error fetching community items:', err);
+      console.error('Error fetching housing items:', err);
       res.status(500).send('Database error');
     } else {
       res.json(results);
@@ -63,9 +74,42 @@ app.get('/api/housing', (req, res) => {
 });
 
 app.get('/api/job', (req, res) => {
-  db.query('SELECT * FROM job_items ORDER BY created_at DESC', (err, results) => {
+  const category = req.query.category;
+  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM job_items';
+  let params = [];
+
+  if (category && category !== 'All') {
+    sql += ' WHERE category = ?';
+    params.push(category);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, params, (err, results) => {
     if (err) {
-      console.error('Error fetching community items:', err);
+      console.error('Error fetching job items:', err);
+      res.status(500).send('Database error');
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/forsale', (req, res) => {
+  const category = req.query.category;
+  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM forsale_items';
+  let params = [];
+
+  if (category && category !== 'All') {
+    sql += ' WHERE category = ?';
+    params.push(category);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      console.error('Error fetching forsale items:', err);
       res.status(500).send('Database error');
     } else {
       res.json(results);
@@ -74,9 +118,20 @@ app.get('/api/job', (req, res) => {
 });
 
 app.get('/api/service', (req, res) => {
-  db.query('SELECT * FROM service_items ORDER BY created_at DESC', (err, results) => {
+  const category = req.query.category;
+  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM service_items';
+  let params = [];
+
+  if (category && category !== 'All') {
+    sql += ' WHERE category = ?';
+    params.push(category);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, params, (err, results) => {
     if (err) {
-      console.error('Error fetching community items:', err);
+      console.error('Error fetching service items:', err);
       res.status(500).send('Database error');
     } else {
       res.json(results);
