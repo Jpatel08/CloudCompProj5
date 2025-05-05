@@ -119,7 +119,7 @@ app.get('/api/forsale', (req, res) => {
 
 app.get('/api/service', (req, res) => {
   const category = req.query.category;
-  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM service_items';
+  let sql = 'SELECT item_id, category, service_name, rates, licensed, insured, city, phone, details, created_at FROM service_items';
   let params = [];
 
   if (category && category !== 'All') {
