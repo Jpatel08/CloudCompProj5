@@ -43,3 +43,33 @@ app.get('/api/community', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
 });
+
+app.get('/api/forsale', (req, res) => {
+  connection.query('SELECT * FROM for_sale_items', (err, results) => {
+    res.json(results);
+  });
+});
+
+app.get('/api/housing', (req, res) => {
+  connection.query('SELECT * FROM housing_items', (err, results) => {
+    res.json(results);
+  });
+});
+
+app.get('/api/services', (req, res) => {
+  connection.query('SELECT * FROM service_items', (err, results) => {
+    res.json(results);
+  });
+});
+
+app.get('/api/jobs', (req, res) => {
+  connection.query('SELECT * FROM job_items', (err, results) => {
+    res.json(results);
+  });
+});
+
+app.get('/api/community', (req, res) => {
+  connection.query('SELECT * FROM community_items', (err, results) => {
+    res.json(results);
+  });
+});
