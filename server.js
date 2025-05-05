@@ -30,7 +30,7 @@ app.get('/test-connection', (req, res) => {
 });
 
 app.get('/api/community', (req, res) => {
-  db.query('SELECT * FROM community_items ORDER BY posted_date DESC', (err, results) => {
+  db.query('SELECT * FROM community_items ORDER BY created_at DESC', (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
@@ -41,7 +41,7 @@ app.get('/api/community', (req, res) => {
 });
 
 app.get('/api/forsale', (req, res) => {
-  db.query('SELECT * FROM forsale_items ORDER BY posted_date DESC', (err, results) => {
+  db.query('SELECT * FROM forsale_items ORDER BY created_at DESC', (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
@@ -52,7 +52,7 @@ app.get('/api/forsale', (req, res) => {
 });
 
 app.get('/api/housing', (req, res) => {
-  db.query('SELECT * FROM housing_items ORDER BY posted_date DESC', (err, results) => {
+  db.query('SELECT * FROM housing_items ORDER BY created_at DESC', (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
@@ -63,7 +63,7 @@ app.get('/api/housing', (req, res) => {
 });
 
 app.get('/api/job', (req, res) => {
-  db.query('SELECT * FROM job_items ORDER BY posted_date DESC', (err, results) => {
+  db.query('SELECT * FROM job_items ORDER BY created_at DESC', (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
@@ -74,7 +74,7 @@ app.get('/api/job', (req, res) => {
 });
 
 app.get('/api/service', (req, res) => {
-  db.query('SELECT * FROM service_items ORDER BY posted_date DESC', (err, results) => {
+  db.query('SELECT * FROM service_items ORDER BY created_at DESC', (err, results) => {
     if (err) {
       console.error('Error fetching community items:', err);
       res.status(500).send('Database error');
