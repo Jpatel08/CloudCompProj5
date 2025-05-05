@@ -29,6 +29,17 @@ app.get('/test-connection', (req, res) => {
   });
 });
 
+app.get('/api/community', (req, res) => {
+  db.query('SELECT * FROM community_items ORDER BY posted_date DESC', (err, results) => {
+    if (err) {
+      console.error('Error fetching community items:', err);
+      res.status(500).send('Database error');
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
 });
