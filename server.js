@@ -40,6 +40,50 @@ app.get('/api/community', (req, res) => {
   });
 });
 
+app.get('/api/forsale', (req, res) => {
+  db.query('SELECT * FROM forsale_items ORDER BY posted_date DESC', (err, results) => {
+    if (err) {
+      console.error('Error fetching community items:', err);
+      res.status(500).send('Database error');
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/housing', (req, res) => {
+  db.query('SELECT * FROM housing_items ORDER BY posted_date DESC', (err, results) => {
+    if (err) {
+      console.error('Error fetching community items:', err);
+      res.status(500).send('Database error');
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/job', (req, res) => {
+  db.query('SELECT * FROM job_items ORDER BY posted_date DESC', (err, results) => {
+    if (err) {
+      console.error('Error fetching community items:', err);
+      res.status(500).send('Database error');
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/service', (req, res) => {
+  db.query('SELECT * FROM service_items ORDER BY posted_date DESC', (err, results) => {
+    if (err) {
+      console.error('Error fetching community items:', err);
+      res.status(500).send('Database error');
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
 });
