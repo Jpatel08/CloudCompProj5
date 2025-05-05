@@ -2,103 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Storefront</title>
+  <title>Services Listings</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
       margin: 0;
-      background-color: #f5f5f5;
-    }
-    header {
-      background-color: #333;
-      color: #fff;
       padding: 20px;
+    }
+
+    h1 {
       text-align: center;
+      color: #333;
     }
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
+
+    .filter-section {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    .products {
+
+    .filter-section select {
+      font-size: 1em;
+      padding: 5px 10px;
+    }
+
+    .catalog {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
-      padding: 20px;
+      margin-top: 30px;
     }
-    .product {
-      background: #fff;
+
+    .item-card {
+      background-color: #fff;
       padding: 15px;
-      border-radius: 5px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
     }
-    .product img {
-      width: 100%;
-      height: auto;
+
+    .item-card:hover {
+      transform: translateY(-3px);
     }
-    .product h3 {
-      margin: 10px 0;
-    }
-    .price {
-      color: green;
+
+    .item-title {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: #0073e6;
       font-weight: bold;
     }
-    .buy-button {
-      background-color: #28a745;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      margin-top: 10px;
+
+    .item-detail {
+      font-size: 0.95em;
+      color: #444;
+      margin-bottom: 5px;
     }
-    footer {
-      background-color: #333;
-      color: white;
+
+    .item-meta {
+      font-size: 0.85em;
+      color: #777;
+    }
+
+    .no-items {
       text-align: center;
-      padding: 15px;
-      margin-top: 30px;
+      font-style: italic;
+      color: #888;
+      margin-top: 50px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>My Awesome Store</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Products</a>
-      <a href="#">Cart</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
+  <h1>Service Listings</h1>
 
-  <section class="products">
-    <div class="product">
-      <img src="https://via.placeholder.com/250" alt="Product 1">
-      <h3>Product 1</h3>
-      <p class="price">$19.99</p>
-      <button class="buy-button">Buy Now</button>
-    </div>
-    <div class="product">
-      <img src="https://via.placeholder.com/250" alt="Product 2">
-      <h3>Product 2</h3>
-      <p class="price">$29.99</p>
-      <button class="buy-button">Buy Now</button>
-    </div>
-    <div class="product">
-      <img src="https://via.placeholder.com/250" alt="Product 3">
-      <h3>Product 3</h3>
-      <p class="price">$39.99</p>
-      <button class="buy-button">Buy Now</button>
-    </div>
-  </section>
+  <div class="filter-section">
+    <label for="category-select">Filter by Category:</label>
+    <select id="category-select">
+      <option value="All">All</option>
+      <option value="automotive">Automotive</option>
+      <option value="computer">Computer</option>
+      <option value="creative">Creative</option>
+      <option value="household">Household</option>
+      <option value="lessons">Lessons</option>
+    </select>    
+  </div>
 
-  <footer>
-    &copy; 2025 My Awesome Store. All rights reserved.
-  </footer>
+  <div class="catalog" id="catalog"></div>
+
+  <script>
+    const catalog = document.getElementById('catalog');
+    const categorySelect = document.getElementById('category-select');
+
+    function loadServices(category) {
+  const url = category === 'All'
+    ? 'http://localhost:3000/api/service'
+    : `http://localhost:3000/api/service?category=${category}`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      catalog.innerHTML = '';
+
+      if (!data || data.length === 0) {
+        catalog.innerHTML = '<p class="no-items">No services found in this category.</p>';
+        return;
+      }
+
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+
+        let cardHTML = `
+          <div class="item-title">${item.service_name}</div>
+          <div class="item-detail"><strong>Rates:</strong> ${item.rates}</div>
+          <div class="item-detail"><strong>City:</strong> ${item.city}</div>
+          <div class="item-detail"><strong>Phone:</strong> ${item.phone}</div>
+          <div class="item-detail"><strong>Details:</strong> ${item.details}</div>
+          <div class="item-meta">Licensed: ${item.licensed ? 'Yes' : 'No'}</div>
+          <div class="item-meta">Insured: ${item.insured ? 'Yes' : 'No'}</div>
+        `;
+
+        card.innerHTML = cardHTML;
+        catalog.appendChild(card);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading service listings:', error);
+      catalog.innerHTML = '<p class="no-items">Error loading services. Try again later.</p>';
+    });
+}
+
+
+    // Load initial category
+    loadServices(categorySelect.value);
+
+    categorySelect.addEventListener('change', () => {
+      loadServices(categorySelect.value);
+    });
+  </script>
 
 </body>
 </html>
