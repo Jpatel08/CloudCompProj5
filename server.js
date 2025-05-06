@@ -1,12 +1,22 @@
+const session = require('express-session');
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
 
 const app = express();
+
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 const PORT = 3000;
 
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 // SQL connection settings
 const connection = mysql.createConnection({
@@ -29,9 +39,47 @@ app.get('/test-connection', (req, res) => {
   });
 });
 
+// Register
+app.post('/api/register', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).send('Missing fields');
+
+  connection.query(
+    'INSERT INTO users (username, password) VALUES (?, ?)',
+    [username, password],
+    (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Username taken or DB error');
+      }
+      res.send('Registration successful');
+    }
+  );
+});
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+
+  connection.query(
+    'SELECT * FROM users WHERE username = ? AND password = ?',
+    [username, password],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'Database error' });
+      }
+      if (results.length === 0) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+
+      res.json({ success: true, message: 'Login successful', username });
+    }
+  );
+});
+
+
+
 app.get('/api/community', (req, res) => {
   const category = req.query.category;
-  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM community_items';
+  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at,                                     category FROM community_items';
   let params = [];
 
   if (category && category !== 'All') {
@@ -97,25 +145,132 @@ app.get('/api/job', (req, res) => {
 
 app.get('/api/forsale', (req, res) => {
   const category = req.query.category;
-  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM forsale_items';
+  let baseQuery = `SELECT * FROM for_sale_items`;
   let params = [];
-
   if (category && category !== 'All') {
-    sql += ' WHERE category = ?';
+    baseQuery += ' WHERE category = ?';
     params.push(category);
   }
+  baseQuery += ' ORDER BY created_at DESC';
 
-  sql += ' ORDER BY created_at DESC';
+  connection.query(baseQuery, params, (err, items) => {
+    if (err) return res.status(500).send('Error fetching base items');
 
-  connection.query(sql, params, (err, results) => {
-    if (err) {
-      console.error('Error fetching forsale items:', err);
-      res.status(500).send('Database error');
-    } else {
-      res.json(results);
-    }
+    const fetchDetails = (item, cb) => {
+      const id = item.item_id;
+      const cat = item.category;
+
+      const detailTables = {
+        'cars + trucks': 'cars_trucks_forsale',
+        'motorcycles': 'motorcycles_forsale',
+        'boats': 'boats_forsale',
+        'books': 'books_forsale',
+        'furniture': 'furniture_forsale'
+      };
+
+      const table = detailTables[cat];
+      if (!table) return cb(null, item);
+
+      connection.query(`SELECT * FROM ${table} WHERE item_id = ?`, [id], (err, rows) => {
+        if (err || rows.length === 0) {
+          item.details = {};
+        } else {
+          const { item_id, ...details } = rows[0];
+          item.details = details;
+        }
+        cb(null, item);
+      });
+    };
+
+    const async = require('async');
+    async.map(items, fetchDetails, (err, enriched) => {
+      if (err) return res.status(500).send('Error enriching items');
+      res.json(enriched);
+    });
   });
 });
+
+app.post('/api/forsale', (req, res) => {
+  let {
+    category, title, item_condition, price,
+    city, phone, description, details
+  } = req.body;
+
+  if (!category || !details || typeof details !== 'object') {
+    console.error('Missing or invalid data:', req.body);
+    return res.status(400).send('Missing category or details');
+  }
+
+  // Clean numeric strings with commas in details
+  const numericFields = ['mileage', 'year_built', 'length', 'year_published', 'year_purchased', 'engine_size'];
+  numericFields.forEach(field => {
+    if (details[field] && typeof details[field] === 'string') {
+      details[field] = parseInt(details[field].replace(/,/g, ''));
+    }
+  });
+
+  const insertMain = `INSERT INTO for_sale_items
+    (category, title, item_condition, price, city, phone, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  const mainParams = [category, title, item_condition, price, city, phone, description];
+
+  connection.query(insertMain, mainParams, (err, result) => {
+    if (err) {
+      console.error('Error inserting into for_sale_items:', err);
+      return res.status(500).send('Error inserting base item');
+    }
+
+    const itemId = result.insertId;
+    let insertDetail = '', detailParams = [];
+
+    switch (category) {
+      case 'cars + trucks':
+        insertDetail = `INSERT INTO cars_trucks_forsale (item_id, year_built, color, type, mileage, fuel, transmission)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        detailParams = [itemId, details.year_built, details.color, details.type, details.mileage, details.fuel, details.transmission];
+        break;
+      case 'motorcycles':
+        insertDetail = `INSERT INTO motorcycles_forsale (item_id, year_built, color, type, engine_size, mileage)
+                        VALUES (?, ?, ?, ?, ?, ?)`;
+        detailParams = [itemId, details.year_built, details.color, details.type, details.engine_size, details.mileage];
+        break;
+      case 'boats':
+        insertDetail = `INSERT INTO boats_forsale (item_id, year_built, color, type, description, length)
+                        VALUES (?, ?, ?, ?, ?, ?)`;
+        detailParams = [itemId, details.year_built, details.color, details.type, details.description, details.length];
+        break;
+      case 'books':
+        insertDetail = `INSERT INTO books_forsale (item_id, author, genre, format, language, year_published)
+                        VALUES (?, ?, ?, ?, ?, ?)`;
+        detailParams = [itemId, details.author, details.genre, details.format, details.language, details.year_published];
+        break;
+      case 'furniture':
+        insertDetail = `INSERT INTO furniture_forsale (item_id, type, color, material, dimensions, year_purchased)
+                        VALUES (?, ?, ?, ?, ?, ?)`;
+        detailParams = [itemId, details.type, details.color, details.material, details.dimensions, details.year_purchased];
+        break;
+      default:
+        console.error('Unsupported category:', category);
+        return res.status(400).send('Unsupported category');
+    }
+
+    if (detailParams.includes(undefined)) {
+      console.error('Missing required detail values for category:', category, detailParams);
+      return res.status(400).send('Missing required detail fields');
+    }
+
+    connection.query(insertDetail, detailParams, (err2) => {
+      if (err2) {
+        console.error('Error inserting detail row:', err2);
+        return res.status(500).send('Error inserting details');
+      }
+      res.status(201).send('Item inserted successfully');
+    });
+  });
+});
+
+
 
 app.get('/api/service', (req, res) => {
   const category = req.query.category;

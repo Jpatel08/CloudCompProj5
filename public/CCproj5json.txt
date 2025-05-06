@@ -1,0 +1,960 @@
+{
+  "sections": [
+    {
+      "name": "For Sale",
+      "categories": [
+        {
+          "name": "cars + trucks",
+          "items": [
+            {
+              "Year-Built": 2018,
+              "Make/Model": "Toyota Camry",
+              "Color": "White",
+              "Type": "Sedan",
+              "Condition": "Used",
+              "Price": 15500,
+              "Mileage": 65000,
+              "Fuel": "Gasoline",
+              "City": "San Diego",
+              "Phone": "555-123-4567"
+            },
+            {
+              "Year-Built": 2022,
+              "Make/Model": "Ford F-150",
+              "Color": "Blue",
+              "Type": "Pickup Truck",
+              "Condition": "New",
+              "Price": 39500,
+              "Mileage": 1200,
+              "Fuel": "Gasoline",
+              "City": "Austin",
+              "Phone": "555-987-6543"
+            },
+            {
+              "Year-Built": 2015,
+              "Make/Model": "Honda Accord",
+              "Color": "Black",
+              "Type": "Sedan",
+              "Condition": "Used",
+              "Price": 11200,
+              "Mileage": 80000,
+              "Fuel": "Hybrid",
+              "City": "Seattle",
+              "Phone": "555-111-2222"
+            }
+          ]
+        },
+        {
+          "name": "motorcycles",
+          "items": [
+            {
+              "Year-Built": 2021,
+              "Make/Model": "Yamaha MT-07",
+              "Color": "Matte Gray",
+              "Type": "Sport",
+              "Condition": "Like New",
+              "Price": 7200,
+              "Mileage": 2500,
+              "Engine Size": "689cc",
+              "City": "Miami",
+              "Phone": "555-333-4444"
+            },
+            {
+              "Year-Built": 2019,
+              "Make/Model": "Harley-Davidson Iron 883",
+              "Color": "Black",
+              "Type": "Cruiser",
+              "Condition": "Used",
+              "Price": 8700,
+              "Mileage": 6000,
+              "Engine Size": "883cc",
+              "City": "Denver",
+              "Phone": "555-555-6666"
+            },
+            {
+              "Year-Built": 2020,
+              "Make/Model": "Kawasaki Ninja 400",
+              "Color": "Green",
+              "Type": "Sport",
+              "Condition": "Good",
+              "Price": 4800,
+              "Mileage": 3000,
+              "Engine Size": "399cc",
+              "City": "Phoenix",
+              "Phone": "555-777-8888"
+            }
+          ]
+        },
+        {
+          "name": "boats",
+          "items": [
+            {
+              "Year-Built": 2017,
+              "Make/Model": "Bayliner Element E18",
+              "Color": "Blue/White",
+              "Type": "Deck Boat",
+              "Condition": "Used",
+              "Price": 15500,
+              "Description": "Great family boat, includes trailer",
+              "City": "Tampa",
+              "Phone": "555-222-3333"
+            },
+            {
+              "Year-Built": 2020,
+              "Make/Model": "Yamaha 242X E-Series",
+              "Color": "Red",
+              "Type": "Jet Boat",
+              "Condition": "Excellent",
+              "Price": 48900,
+              "Description": "Low hours, loaded with features",
+              "City": "Orlando",
+              "Phone": "555-444-5555"
+            },
+            {
+              "Year-Built": 2015,
+              "Make/Model": "Sea Ray 190 SPX",
+              "Color": "White/Black",
+              "Type": "Bowrider",
+              "Condition": "Good",
+              "Price": 21000,
+              "Description": "Well-maintained, freshwater use only",
+              "City": "Sacramento",
+              "Phone": "555-999-0000"
+            }
+          ]
+        },
+        {
+          "name": "books",
+          "items": [
+            {
+              "Title": "The Great Gatsby",
+              "Author": "F. Scott Fitzgerald",
+              "Genre": "Classic",
+              "Condition": "Used - Good",
+              "Price": 8,
+              "Format": "Paperback",
+              "Language": "English",
+              "City": "Boston",
+              "Phone": "555-123-7890"
+            },
+            {
+              "Title": "Sapiens",
+              "Author": "Yuval Noah Harari",
+              "Genre": "Non-Fiction",
+              "Condition": "Like New",
+              "Price": 12,
+              "Format": "Hardcover",
+              "Language": "English",
+              "City": "Chicago",
+              "Phone": "555-456-7890"
+            },
+            {
+              "Title": "1984",
+              "Author": "George Orwell",
+              "Genre": "Dystopian",
+              "Condition": "New",
+              "Price": 10,
+              "Format": "Paperback",
+              "Language": "English",
+              "City": "New York",
+              "Phone": "555-321-6540"
+            }
+          ]
+        },
+        {
+          "name": "furniture",
+          "items": [
+            {
+              "Type": "Sofa",
+              "Material": "Leather",
+              "Color": "Brown",
+              "Condition": "Used - Good",
+              "Dimensions": "84x36x34 inches",
+              "Price": 350,
+              "Description": "3-seater, minor wear",
+              "City": "Atlanta",
+              "Phone": "555-678-9012"
+            },
+            {
+              "Type": "Dining Table",
+              "Material": "Wood",
+              "Color": "Oak",
+              "Condition": "Excellent",
+              "Dimensions": "60x36 inches",
+              "Price": 200,
+              "Description": "Includes 4 chairs",
+              "City": "Dallas",
+              "Phone": "555-345-6789"
+            },
+            {
+              "Type": "Desk",
+              "Material": "Metal/Wood",
+              "Color": "Black",
+              "Condition": "New",
+              "Dimensions": "48x24 inches",
+              "Price": 120,
+              "Description": "Modern style, great for office",
+              "City": "San Jose",
+              "Phone": "555-876-5432"
+            }
+          ]
+        }
+      ]
+    },
+    {
+  "name": "Housing",
+  "categories": [
+    {
+      "name": "apartments",
+      "items": [
+        {
+          "Type": "2 Bedroom",
+          "Location": "Downtown",
+          "Rent": 1200,
+          "Square-Footage": 950,
+          "Pets": "Allowed",
+          "Laundry": "In-unit",
+          "Parking": "Garage",
+          "Condition": "Renovated",
+          "City": "Chicago",
+          "Phone": "555-101-2020"
+        },
+        {
+          "Type": "Studio",
+          "Location": "Uptown",
+          "Rent": 850,
+          "Square-Footage": 450,
+          "Pets": "Not Allowed",
+          "Laundry": "On-site",
+          "Parking": "Street",
+          "Condition": "Good",
+          "City": "Austin",
+          "Phone": "555-303-4040"
+        },
+        {
+          "Type": "1 Bedroom",
+          "Location": "Suburbs",
+          "Rent": 950,
+          "Square-Footage": 700,
+          "Pets": "Allowed with fee",
+          "Laundry": "In-unit",
+          "Parking": "Off-street",
+          "Condition": "New",
+          "City": "Seattle",
+          "Phone": "555-505-6060"
+        }
+      ]
+    },
+    {
+      "name": "rooms/shared",
+      "items": [
+        {
+          "Type": "Private Room",
+          "Location": "Near University",
+          "Rent": 600,
+          "Square-Footage": 300,
+          "Furnished": true,
+          "Utilities Included": true,
+          "Parking": "Street",
+          "Roommates": 2,
+          "City": "Berkeley",
+          "Phone": "555-707-8080"
+        },
+        {
+          "Type": "Shared Room",
+          "Location": "Downtown",
+          "Rent": 450,
+          "Square-Footage": 200,
+          "Furnished": false,
+          "Utilities Included": false,
+          "Parking": "None",
+          "Roommates": 1,
+          "City": "Portland",
+          "Phone": "555-909-1010"
+        },
+        {
+          "Type": "Private Room",
+          "Location": "Residential Area",
+          "Rent": 550,
+          "Square-Footage": 280,
+          "Furnished": true,
+          "Utilities Included": true,
+          "Parking": "Driveway",
+          "Roommates": 3,
+          "City": "Raleigh",
+          "Phone": "555-111-2121"
+        }
+      ]
+    },
+    {
+      "name": "sublets",
+      "items": [
+        {
+          "Type": "1 Bedroom Apartment",
+          "Location": "City Center",
+          "Rent": 1100,
+          "Lease Length": "3 months",
+          "Furnished": true,
+          "Utilities Included": false,
+          "Available From": "2025-05-01",
+          "Condition": "Excellent",
+          "City": "Denver",
+          "Phone": "555-313-4141"
+        },
+        {
+          "Type": "Studio",
+          "Location": "Old Town",
+          "Rent": 900,
+          "Lease Length": "2 months",
+          "Furnished": false,
+          "Utilities Included": true,
+          "Available From": "2025-06-15",
+          "Condition": "Good",
+          "City": "Savannah",
+          "Phone": "555-515-6161"
+        },
+        {
+          "Type": "2 Bedroom Condo",
+          "Location": "Waterfront",
+          "Rent": 1600,
+          "Lease Length": "6 months",
+          "Furnished": true,
+          "Utilities Included": true,
+          "Available From": "2025-07-01",
+          "Condition": "Luxury",
+          "City": "Miami",
+          "Phone": "555-717-8181"
+        }
+      ]
+    },
+    {
+      "name": "vacation rentals",
+      "items": [
+        {
+          "Type": "Beach House",
+          "Location": "Santa Monica",
+          "Price per Night": 300,
+          "Bedrooms": 3,
+          "Baths": 2,
+          "Max Guests": 6,
+          "WiFi": true,
+          "Parking": "Private Driveway",
+          "Phone": "555-919-2020"
+        },
+        {
+          "Type": "Cabin",
+          "Location": "Smoky Mountains",
+          "Price per Night": 180,
+          "Bedrooms": 2,
+          "Baths": 1,
+          "Max Guests": 4,
+          "WiFi": false,
+          "Parking": "On-site",
+          "Phone": "555-222-2323"
+        },
+        {
+          "Type": "Downtown Loft",
+          "Location": "New Orleans",
+          "Price per Night": 250,
+          "Bedrooms": 1,
+          "Baths": 1,
+          "Max Guests": 2,
+          "WiFi": true,
+          "Parking": "Valet",
+          "Phone": "555-333-3434"
+        }
+      ]
+    },
+    {
+      "name": "real estate for sale",
+      "items": [
+        {
+          "Type": "Single Family Home",
+          "Location": "Suburb",
+          "Price": 325000,
+          "Bedrooms": 4,
+          "Baths": 3,
+          "Square-Footage": 2200,
+          "Lot Size": "0.25 acres",
+          "Condition": "New",
+          "City": "Charlotte",
+          "Phone": "555-444-4545"
+        },
+        {
+          "Type": "Condo",
+          "Location": "Urban",
+          "Price": 275000,
+          "Bedrooms": 2,
+          "Baths": 2,
+          "Square-Footage": 1300,
+          "HOA Fees": 300,
+          "Condition": "Updated",
+          "City": "Minneapolis",
+          "Phone": "555-555-5656"
+        },
+        {
+          "Type": "Townhouse",
+          "Location": "City Center",
+          "Price": 310000,
+          "Bedrooms": 3,
+          "Baths": 2.5,
+          "Square-Footage": 1600,
+          "Garage": "2-car",
+          "Condition": "Good",
+          "City": "Philadelphia",
+          "Phone": "555-666-6767"
+        }
+      ]
+    }
+  ]
+}
+},
+    {
+  "name": "Services",
+  "categories": [
+    {
+      "name": "automotive",
+      "items": [
+        {
+          "Service": "Mobile Mechanic",
+          "Specialties": "Brake repair, Oil change, Diagnostics",
+          "Availability": "7 days a week",
+          "Rates": "Starts at $50/hr",
+          "Licensed": true,
+          "Insured": true,
+          "City": "Houston",
+          "Phone": "555-101-0101"
+        },
+        {
+          "Service": "Car Detailing",
+          "Specialties": "Interior shampoo, Wax, Ceramic coating",
+          "Availability": "Mon-Sat",
+          "Rates": "$100 full detail",
+          "Licensed": false,
+          "Insured": false,
+          "City": "Los Angeles",
+          "Phone": "555-202-0202"
+        },
+        {
+          "Service": "Towing",
+          "Specialties": "Emergency roadside, Long-distance",
+          "Availability": "24/7",
+          "Rates": "$75 base fee",
+          "Licensed": true,
+          "Insured": true,
+          "City": "Atlanta",
+          "Phone": "555-303-0303"
+        }
+      ]
+    },
+    {
+      "name": "computer",
+      "items": [
+        {
+          "Service": "PC Repair",
+          "Specialties": "Virus removal, OS install, Hardware replacement",
+          "Availability": "Weekdays",
+          "Rates": "$40/hr",
+          "Licensed": false,
+          "Insured": false,
+          "City": "San Francisco",
+          "Phone": "555-404-0404"
+        },
+        {
+          "Service": "Data Recovery",
+          "Specialties": "Hard drives, SSD, Flash drives",
+          "Availability": "Mon-Fri",
+          "Rates": "Free diagnostic, $100+ recovery",
+          "Licensed": true,
+          "Insured": true,
+          "City": "Boston",
+          "Phone": "555-505-0505"
+        },
+        {
+          "Service": "IT Support",
+          "Specialties": "Network setup, Remote troubleshooting",
+          "Availability": "Weekdays and Saturday",
+          "Rates": "$60/hr",
+          "Licensed": true,
+          "Insured": true,
+          "City": "Austin",
+          "Phone": "555-606-0606"
+        }
+      ]
+    },
+    {
+      "name": "creative",
+      "items": [
+        {
+          "Service": "Photography",
+          "Specialties": "Weddings, Events, Portraits",
+          "Availability": "By appointment",
+          "Rates": "$150/session",
+          "Portfolio": "yes",
+          "City": "New York",
+          "Phone": "555-707-0707"
+        },
+        {
+          "Service": "Graphic Design",
+          "Specialties": "Logos, Flyers, Social Media",
+          "Availability": "Flexible",
+          "Rates": "$50/hr",
+          "Portfolio": "yes",
+          "City": "Chicago",
+          "Phone": "555-808-0808"
+        },
+        {
+          "Service": "Video Editing",
+          "Specialties": "Short films, Commercials, YouTube",
+          "Availability": "Remote only",
+          "Rates": "Project-based",
+          "Portfolio": "yes",
+          "City": "Remote",
+          "Phone": "555-909-0909"
+        }
+      ]
+    },
+    {
+      "name": "household",
+      "items": [
+        {
+          "Service": "House Cleaning",
+          "Specialties": "Deep clean, Move-out, Weekly service",
+          "Availability": "Mon-Fri",
+          "Rates": "$30/hr",
+          "Licensed": true,
+          "Insured": true,
+          "City": "Phoenix",
+          "Phone": "555-111-1111"
+        },
+        {
+          "Service": "Handyman",
+          "Specialties": "Repairs, Installations, Painting",
+          "Availability": "Weekdays and Saturday",
+          "Rates": "$45/hr",
+          "Licensed": true,
+          "Insured": true,
+          "City": "Portland",
+          "Phone": "555-222-2222"
+        },
+        {
+          "Service": "Lawn Care",
+          "Specialties": "Mowing, Edging, Cleanup",
+          "Availability": "Seasonal",
+          "Rates": "From $40/visit",
+          "Licensed": false,
+          "Insured": false,
+          "City": "Nashville",
+          "Phone": "555-333-3333"
+        }
+      ]
+    },
+    {
+      "name": "lessons",
+      "items": [
+        {
+          "Service": "Piano Lessons",
+          "Level": "Beginner to Intermediate",
+          "Location": "In-home or Online",
+          "Rates": "$30/30 minutes",
+          "Availability": "Evenings and weekends",
+          "City": "Denver",
+          "Phone": "555-444-4444"
+        },
+        {
+          "Service": "Math Tutoring",
+          "Level": "Middle to High School",
+          "Location": "Online only",
+          "Rates": "$40/hr",
+          "Availability": "Flexible",
+          "City": "Remote",
+          "Phone": "555-555-5555"
+        },
+        {
+          "Service": "Yoga Instruction",
+          "Level": "All levels",
+          "Location": "Studio or Park",
+          "Rates": "$15/session",
+          "Availability": "Morning classes",
+          "City": "Santa Cruz",
+          "Phone": "555-666-6666"
+        }
+      ]
+    }
+  ]
+},
+    {
+  "name": "Jobs",
+  "categories": [
+    {
+      "name": "customer service",
+      "items": [
+        {
+          "Job Title": "Call Center Representative",
+          "Company": "GlobalConnect",
+          "Type": "Full-time",
+          "Location": "Dallas, TX",
+          "Salary": "$17/hr",
+          "Experience": "1+ years",
+          "Remote": false,
+          "Description": "Answer incoming customer calls and resolve issues.",
+          "Phone": "555-101-1212"
+        },
+        {
+          "Job Title": "Front Desk Assistant",
+          "Company": "WellCare Clinic",
+          "Type": "Part-time",
+          "Location": "Columbus, OH",
+          "Salary": "$15/hr",
+          "Experience": "Healthcare preferred",
+          "Remote": false,
+          "Description": "Greet patients and manage appointment scheduling.",
+          "Phone": "555-202-2323"
+        },
+        {
+          "Job Title": "Customer Success Specialist",
+          "Company": "TechCore Inc.",
+          "Type": "Full-time",
+          "Location": "Remote",
+          "Salary": "$45,000/year",
+          "Experience": "SaaS support experience preferred",
+          "Remote": true,
+          "Description": "Ensure high-quality onboarding and client retention.",
+          "Phone": "555-303-3434"
+        }
+      ]
+    },
+    {
+      "name": "education",
+      "items": [
+        {
+          "Job Title": "Elementary School Teacher",
+          "Company": "Maple Grove Schools",
+          "Type": "Full-time",
+          "Location": "Raleigh, NC",
+          "Salary": "$52,000/year",
+          "Experience": "Certified K-5",
+          "Remote": false,
+          "Description": "Teach 3rd grade curriculum and manage classroom.",
+          "Phone": "555-404-4545"
+        },
+        {
+          "Job Title": "ESL Tutor",
+          "Company": "LanguageLink",
+          "Type": "Contract",
+          "Location": "Online",
+          "Salary": "$25/hr",
+          "Experience": "TEFL/TESOL certified",
+          "Remote": true,
+          "Description": "Provide 1-on-1 ESL lessons via video.",
+          "Phone": "555-505-5656"
+        },
+        {
+          "Job Title": "Substitute Teacher",
+          "Company": "District 78",
+          "Type": "On-call",
+          "Location": "Tucson, AZ",
+          "Salary": "$140/day",
+          "Experience": "Bachelor’s degree",
+          "Remote": false,
+          "Description": "Fill in for absent teachers in multiple grades.",
+          "Phone": "555-606-6767"
+        }
+      ]
+    },
+    {
+      "name": "food/beverage/hospitality",
+      "items": [
+        {
+          "Job Title": "Barista",
+          "Company": "Brewed Awakening",
+          "Type": "Part-time",
+          "Location": "Portland, OR",
+          "Salary": "$14/hr + tips",
+          "Experience": "Coffee shop experience preferred",
+          "Remote": false,
+          "Description": "Prepare drinks and provide excellent customer service.",
+          "Phone": "555-707-7878"
+        },
+        {
+          "Job Title": "Line Cook",
+          "Company": "Urban Eats",
+          "Type": "Full-time",
+          "Location": "San Diego, CA",
+          "Salary": "$18/hr",
+          "Experience": "2 years kitchen experience",
+          "Remote": false,
+          "Description": "Cook and prep menu items to order.",
+          "Phone": "555-808-8989"
+        },
+        {
+          "Job Title": "Hotel Front Desk Clerk",
+          "Company": "Seaside Suites",
+          "Type": "Full-time",
+          "Location": "Charleston, SC",
+          "Salary": "$16/hr",
+          "Experience": "Hospitality background a plus",
+          "Remote": false,
+          "Description": "Check guests in/out and handle bookings.",
+          "Phone": "555-909-9090"
+        }
+      ]
+    },
+    {
+      "name": "general labor",
+      "items": [
+        {
+          "Job Title": "Warehouse Associate",
+          "Company": "PackPro Logistics",
+          "Type": "Full-time",
+          "Location": "Indianapolis, IN",
+          "Salary": "$17/hr",
+          "Experience": "No experience required",
+          "Remote": false,
+          "Description": "Pick, pack, and ship warehouse orders.",
+          "Phone": "555-111-1212"
+        },
+        {
+          "Job Title": "Mover",
+          "Company": "Strong Arms Moving",
+          "Type": "Seasonal",
+          "Location": "Philadelphia, PA",
+          "Salary": "$18/hr + tips",
+          "Experience": "Physically demanding work",
+          "Remote": false,
+          "Description": "Help with residential and commercial moves.",
+          "Phone": "555-222-2323"
+        },
+        {
+          "Job Title": "Landscaper",
+          "Company": "GreenPro Outdoor",
+          "Type": "Full-time",
+          "Location": "Boise, ID",
+          "Salary": "$16/hr",
+          "Experience": "Outdoor work experience preferred",
+          "Remote": false,
+          "Description": "Mow lawns, plant flowers, maintain yards.",
+          "Phone": "555-333-3434"
+        }
+      ]
+    },
+    {
+      "name": "tech",
+      "items": [
+        {
+          "Job Title": "Junior Web Developer",
+          "Company": "CodeBridge",
+          "Type": "Full-time",
+          "Location": "Remote",
+          "Salary": "$65,000/year",
+          "Experience": "HTML, CSS, JavaScript",
+          "Remote": true,
+          "Description": "Assist in front-end development projects.",
+          "Phone": "555-444-4545"
+        },
+        {
+          "Job Title": "IT Support Technician",
+          "Company": "CityCorp IT",
+          "Type": "Full-time",
+          "Location": "Cleveland, OH",
+          "Salary": "$20/hr",
+          "Experience": "Windows/Mac troubleshooting",
+          "Remote": false,
+          "Description": "Support internal users with technical issues.",
+          "Phone": "555-555-5656"
+        },
+        {
+          "Job Title": "Data Analyst Intern",
+          "Company": "Insightify",
+          "Type": "Internship",
+          "Location": "Boston, MA",
+          "Salary": "Unpaid / College Credit",
+          "Experience": "Excel, Python, SQL",
+          "Remote": hybrid,
+          "Description": "Assist with data cleaning and reporting.",
+          "Phone": "555-666-6767"
+        }
+      ]
+    }
+  ]
+},
+    {
+  "name": "Community",
+  "categories": [
+    {
+      "name": "activities",
+      "items": [
+        {
+          "Title": "Weekend Hiking Group",
+          "Description": "Join us every Saturday morning for scenic hikes.",
+          "Location": "Denver, CO",
+          "Date": "Ongoing, Saturdays 8am",
+          "Age Group": "18+",
+          "Cost": "Free",
+          "Contact": "hikeclub@outdoors.com",
+          "Phone": "555-101-1111"
+        },
+        {
+          "Title": "Open Mic Night",
+          "Description": "Poetry, comedy, and music welcome!",
+          "Location": "Portland, OR",
+          "Date": "May 15, 2025",
+          "Age Group": "All ages",
+          "Cost": "$5",
+          "Contact": "events@poetcafe.com",
+          "Phone": "555-202-2222"
+        },
+        {
+          "Title": "Board Game Meetup",
+          "Description": "Weekly strategy and social games.",
+          "Location": "Chicago, IL",
+          "Date": "Thursdays 6pm",
+          "Age Group": "21+",
+          "Cost": "Free",
+          "Contact": "games@tabletopchicago.com",
+          "Phone": "555-303-3333"
+        }
+      ]
+    },
+    {
+      "name": "artists",
+      "items": [
+        {
+          "Title": "Looking for a Photographer",
+          "Description": "Need a portrait session for professional headshots.",
+          "Location": "Austin, TX",
+          "Pay": "$150 budget",
+          "Needed By": "May 10, 2025",
+          "Experience Level": "Intermediate",
+          "Contact": "headshots@austinmail.com",
+          "Phone": "555-404-4444"
+        },
+        {
+          "Title": "Live Mural Painting",
+          "Description": "Seeking muralist for community festival backdrop.",
+          "Location": "Philadelphia, PA",
+          "Pay": "$300 stipend",
+          "Event Date": "June 22, 2025",
+          "Materials Provided": true,
+          "Contact": "arts@phillycomm.org",
+          "Phone": "555-505-5555"
+        },
+        {
+          "Title": "Band Seeks Drummer",
+          "Description": "Indie rock band in need of committed drummer.",
+          "Location": "Seattle, WA",
+          "Rehearsals": "Weeknights",
+          "Genre": "Rock/Alternative",
+          "Contact": "bandsearch@seattlesound.com",
+          "Phone": "555-606-6666"
+        }
+      ]
+    },
+    {
+      "name": "classes",
+      "items": [
+        {
+          "Title": "Intro to Pottery",
+          "Description": "Hands-on clay shaping and glazing techniques.",
+          "Location": "Santa Fe, NM",
+          "Schedule": "Tuesdays 6–8pm",
+          "Duration": "6 weeks",
+          "Cost": "$180",
+          "Contact": "claycenter@artclass.org",
+          "Phone": "555-707-7777"
+        },
+        {
+          "Title": "CPR Certification Course",
+          "Description": "American Heart Association certified class.",
+          "Location": "Phoenix, AZ",
+          "Schedule": "May 12, 2025",
+          "Duration": "1 Day",
+          "Cost": "$90",
+          "Contact": "cprtrain@phxhealth.org",
+          "Phone": "555-808-8888"
+        },
+        {
+          "Title": "Beginner Spanish",
+          "Description": "Conversational Spanish with native instructor.",
+          "Location": "Miami, FL",
+          "Schedule": "Mondays & Wednesdays",
+          "Duration": "4 weeks",
+          "Cost": "$120",
+          "Contact": "language@miamicenter.org",
+          "Phone": "555-909-9999"
+        }
+      ]
+    },
+    {
+      "name": "events",
+      "items": [
+        {
+          "Title": "Community Yard Sale",
+          "Description": "Multi-family sale with clothes, toys, furniture.",
+          "Location": "Reno, NV",
+          "Date": "May 4, 2025",
+          "Time": "8am – 1pm",
+          "Cost": "Free to attend",
+          "Contact": "yardsale@nevadaneighbors.com",
+          "Phone": "555-111-1212"
+        },
+        {
+          "Title": "Dog Adoption Fair",
+          "Description": "Meet adoptable dogs from local rescues.",
+          "Location": "San Jose, CA",
+          "Date": "May 18, 2025",
+          "Time": "10am – 2pm",
+          "Cost": "Free",
+          "Contact": "pets@sjanimalrescue.org",
+          "Phone": "555-222-2323"
+        },
+        {
+          "Title": "Juneteenth Celebration",
+          "Description": "Parade, food trucks, speakers, and live music.",
+          "Location": "Atlanta, GA",
+          "Date": "June 19, 2025",
+          "Time": "Noon – 9pm",
+          "Cost": "Free",
+          "Contact": "info@atljuneteenth.org",
+          "Phone": "555-333-3434"
+        }
+      ]
+    },
+    {
+      "name": "volunteers",
+      "items": [
+        {
+          "Title": "Park Cleanup Crew",
+          "Description": "Help beautify local parks and trails.",
+          "Location": "Madison, WI",
+          "Date": "Every Saturday",
+          "Time": "9am – 11am",
+          "Requirements": "Gloves and water",
+          "Contact": "parks@madvolunteers.org",
+          "Phone": "555-444-4545"
+        },
+        {
+          "Title": "Food Pantry Assistant",
+          "Description": "Sort and pack food donations for families in need.",
+          "Location": "Detroit, MI",
+          "Date": "Ongoing weekdays",
+          "Time": "Flexible shifts",
+          "Requirements": "Closed-toe shoes",
+          "Contact": "help@detroitpantry.org",
+          "Phone": "555-555-5656"
+        },
+        {
+          "Title": "Senior Companion",
+          "Description": "Visit and chat with elderly residents.",
+          "Location": "Tampa, FL",
+          "Date": "Volunteer orientation May 5",
+          "Time": "2 hrs/week minimum",
+          "Requirements": "Background check",
+          "Contact": "volunteer@careconnect.org",
+          "Phone": "555-666-6767"
+        }
+      ]
+    }
+  ]
+}
+}
