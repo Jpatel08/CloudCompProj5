@@ -294,6 +294,41 @@ app.get('/api/service', (req, res) => {
   });
 });
 
+app.post('/api/service', (req, res) => {
+  const {
+    category,
+    service_name,
+    rates,
+    city,
+    phone,
+    details,
+    licensed,
+    insured
+  } = req.body;
+
+  if (!category || !service_name || !rates || !city || !phone || !details) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  const sql = `
+    INSERT INTO service_items 
+    (category, service_name, rates, city, phone, details, licensed, insured, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+  `;
+
+  const params = [category, service_name, rates, city, phone, details, licensed, insured];
+
+  connection.query(sql, params, (err, result) => {
+    if (err) {
+      console.error('Error inserting service listing:', err);
+      return res.status(500).send('Database insert error');
+    }
+
+    res.status(201).json({ success: true, id: result.insertId });
+  });
+});
+
+
 app.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
 });

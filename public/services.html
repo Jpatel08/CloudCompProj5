@@ -16,14 +16,18 @@
       color: #333;
     }
 
-    .filter-section {
+    .filter-section,
+    .form-section {
       text-align: center;
       margin-bottom: 20px;
     }
 
-    .filter-section select {
+    .filter-section select,
+    .form-section input,
+    .form-section select {
       font-size: 1em;
-      padding: 5px 10px;
+      padding: 6px;
+      margin: 5px;
     }
 
     .catalog {
@@ -69,9 +73,17 @@
       color: #888;
       margin-top: 50px;
     }
+
+    #listing-form {
+      display: none;
+    }
   </style>
 </head>
 <body>
+
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <button id="auth-btn">Login</button>
+  </div>
 
   <h1>Service Listings</h1>
 
@@ -84,7 +96,30 @@
       <option value="creative">Creative</option>
       <option value="household">Household</option>
       <option value="lessons">Lessons</option>
-    </select>    
+    </select>
+  </div>
+
+  <div class="form-section">
+    <button id="toggle-form-btn" style="display: none;">Add New Listing</button>
+    <form id="listing-form">
+      <h2>Create a New Listing</h2>
+      <select name="category" id="form-category" required>
+        <option value="">Select Category</option>
+        <option value="automotive">Automotive</option>
+        <option value="computer">Computer</option>
+        <option value="creative">Creative</option>
+        <option value="household">Household</option>
+        <option value="lessons">Lessons</option>
+      </select><br>
+      <input type="text" name="service_name" placeholder="Service Name" required />
+      <input type="text" name="rates" placeholder="Rates (e.g. $40/hr)" required />
+      <input type="text" name="city" placeholder="City" required />
+      <input type="text" name="phone" placeholder="Phone" required />
+      <input type="text" name="details" placeholder="Details / Specialties" required />
+      <label><input type="checkbox" name="licensed" /> Licensed</label>
+      <label><input type="checkbox" name="insured" /> Insured</label><br>
+      <button type="submit">Submit Listing</button>
+    </form>
   </div>
 
   <div class="catalog" id="catalog"></div>
@@ -92,53 +127,110 @@
   <script>
     const catalog = document.getElementById('catalog');
     const categorySelect = document.getElementById('category-select');
+    const toggleFormBtn = document.getElementById('toggle-form-btn');
+    const listingForm = document.getElementById('listing-form');
+    const authBtn = document.getElementById('auth-btn');
+
+    // Handle login/logout UI
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('user')) {
+        authBtn.textContent = 'Logout';
+        toggleFormBtn.style.display = 'inline-block';
+        authBtn.onclick = () => {
+          localStorage.removeItem('user');
+          location.reload();
+        };
+      } else {
+        authBtn.textContent = 'Login';
+        toggleFormBtn.style.display = 'none';
+        authBtn.onclick = () => {
+          window.location.href = 'login.html';
+        };
+      }
+    });
+
+    toggleFormBtn.addEventListener('click', () => {
+      listingForm.style.display = listingForm.style.display === 'none' ? 'block' : 'none';
+    });
+
+    listingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(listingForm);
+
+      const payload = {
+        category: formData.get('category'),
+        service_name: formData.get('service_name'),
+        rates: formData.get('rates'),
+        city: formData.get('city'),
+        phone: formData.get('phone'),
+        details: formData.get('details'),
+        licensed: formData.get('licensed') ? 1 : 0,
+        insured: formData.get('insured') ? 1 : 0
+      };
+
+      fetch('http://localhost:3000/api/service', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to submit');
+        listingForm.reset();
+        listingForm.style.display = 'none';
+        loadServices(categorySelect.value);
+        alert('Listing submitted successfully!');
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Error submitting listing.');
+      });
+    });
 
     function loadServices(category) {
-  const url = category === 'All'
-    ? 'http://localhost:3000/api/service'
-    : `http://localhost:3000/api/service?category=${category}`;
+      const url = category === 'All'
+        ? 'http://localhost:3000/api/service'
+        : `http://localhost:3000/api/service?category=${category}`;
 
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      catalog.innerHTML = '';
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          catalog.innerHTML = '';
 
-      if (!data || data.length === 0) {
-        catalog.innerHTML = '<p class="no-items">No services found in this category.</p>';
-        return;
-      }
+          if (!data || data.length === 0) {
+            catalog.innerHTML = '<p class="no-items">No services found in this category.</p>';
+            return;
+          }
 
-      data.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'item-card';
+          data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'item-card';
 
-        let cardHTML = `
-          <div class="item-title">${item.service_name}</div>
-          <div class="item-detail"><strong>Rates:</strong> ${item.rates}</div>
-          <div class="item-detail"><strong>City:</strong> ${item.city}</div>
-          <div class="item-detail"><strong>Phone:</strong> ${item.phone}</div>
-          <div class="item-detail"><strong>Details:</strong> ${item.details}</div>
-          <div class="item-meta">Licensed: ${item.licensed ? 'Yes' : 'No'}</div>
-          <div class="item-meta">Insured: ${item.insured ? 'Yes' : 'No'}</div>
-        `;
+            let cardHTML = `
+              <div class="item-title">${item.service_name}</div>
+              <div class="item-detail"><strong>Rates:</strong> ${item.rates}</div>
+              <div class="item-detail"><strong>City:</strong> ${item.city}</div>
+              <div class="item-detail"><strong>Phone:</strong> ${item.phone}</div>
+              <div class="item-detail"><strong>Details:</strong> ${item.details}</div>
+              <div class="item-meta">Licensed: ${item.licensed ? 'Yes' : 'No'}</div>
+              <div class="item-meta">Insured: ${item.insured ? 'Yes' : 'No'}</div>
+            `;
 
-        card.innerHTML = cardHTML;
-        catalog.appendChild(card);
-      });
-    })
-    .catch(error => {
-      console.error('Error loading service listings:', error);
-      catalog.innerHTML = '<p class="no-items">Error loading services. Try again later.</p>';
-    });
-}
-
-
-    // Load initial category
-    loadServices(categorySelect.value);
+            card.innerHTML = cardHTML;
+            catalog.appendChild(card);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading service listings:', error);
+          catalog.innerHTML = '<p class="no-items">Error loading services. Try again later.</p>';
+        });
+    }
 
     categorySelect.addEventListener('change', () => {
       loadServices(categorySelect.value);
     });
+
+    loadServices(categorySelect.value);
   </script>
 
 </body>
