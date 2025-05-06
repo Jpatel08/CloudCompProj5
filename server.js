@@ -79,23 +79,119 @@ app.post('/api/login', (req, res) => {
 
 app.get('/api/community', (req, res) => {
   const category = req.query.category;
-  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at,                                     category FROM community_items';
+  let baseQuery = `SELECT * FROM community_items`;
   let params = [];
-
   if (category && category !== 'All') {
-    sql += ' WHERE category = ?';
+    baseQuery += ' WHERE category = ?';
     params.push(category);
   }
 
-  sql += ' ORDER BY created_at DESC';
+  connection.query(baseQuery, params, (err, items) => {
+    if (err) return res.status(500).send('Error fetching base items');
 
-  connection.query(sql, params, (err, results) => {
+    const fetchDetails = (item, cb) => {
+      const id = item.item_id;
+      const cat = item.category;
+
+      const detailTables = {
+        'activities': 'activities_community',
+        'artists': 'artists_community',
+        'classes': 'classes_community',
+        'events': 'events_community',
+        'volunteers': 'volunteers_community'
+      };
+
+      const table = detailTables[cat];
+      if (!table) return cb(null, item);
+
+      connection.query(`SELECT * FROM ${table} WHERE item_id = ?`, [id], (err, rows) => {
+        if (err || rows.length === 0) {
+          item.details = {};
+        } else {
+          const { item_id, ...details } = rows[0];
+          item.details = details;
+        }
+        cb(null, item);
+      });
+    };
+
+    const async = require('async');
+    async.map(items, fetchDetails, (err, enriched) => {
+      if (err) return res.status(500).send('Error enriching items');
+      res.json(enriched);
+    });
+  });
+});
+
+app.post('/api/community', (req, res) => {
+  let {
+    category, title, location,
+    contact_email, phone, description, details
+  } = req.body;
+
+  if (!category || !details || typeof details !== 'object') {
+    console.error('Missing or invalid data:', req.body);
+    return res.status(400).send('Missing category or details');
+  }
+
+  const insertMain = `INSERT INTO community_items
+    (category, title, location, contact_email, phone, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  const mainParams = [category, title, location, contact_email, phone, description];
+
+  connection.query(insertMain, mainParams, (err, result) => {
     if (err) {
-      console.error('Error fetching community items:', err);
-      res.status(500).send('Database error');
-    } else {
-      res.json(results);
+      console.error('Error inserting into community_items:', err);
+      return res.status(500).send('Error inserting base item');
     }
+
+    const itemId = result.insertId;
+    let insertDetail = '', detailParams = [];
+
+    switch (category) {
+      case 'activities':
+        insertDetail = `INSERT INTO activities_community (item_id, date, age_group, cost)
+                        VALUES (?, ?, ?, ?)`;
+        detailParams = [itemId, details.date, details.age_group, details.cost];
+        break;
+      case 'artists':
+        insertDetail = `INSERT INTO artists_community (item_id, pay, needed_by, experience_level)
+                        VALUES (?, ?, ?, ?)`;
+        detailParams = [itemId, details.pay, details.needed_by, details.experience_level];
+        break;
+      case 'classes':
+        insertDetail = `INSERT INTO classes_community (item_id, itinerary, duration, cost)
+                        VALUES (?, ?, ?, ?)`;
+        detailParams = [itemId, details.itinerary, details.duration, details.cost];
+        break;
+      case 'events':
+        insertDetail = `INSERT INTO events_community (item_id, date, time, cost)
+                        VALUES (?, ?, ?, ?)`;
+        detailParams = [itemId, details.date, details.time, details.cost];
+        break;
+      case 'volunteers':
+        insertDetail = `INSERT INTO volunteers_community (item_id, date, time, requirements)
+                        VALUES (?, ?, ?, ?)`;
+        detailParams = [itemId, details.date, details.time, details.requirements];
+        break;
+      default:
+        console.error('Unsupported category:', category);
+        return res.status(400).send('Unsupported category');
+    }
+
+    if (detailParams.includes(undefined)) {
+      console.error('Missing required detail values for category:', category, detailParams);
+      return res.status(400).send('Missing required detail fields');
+    }
+
+    connection.query(insertDetail, detailParams, (err2) => {
+      if (err2) {
+        console.error('Error inserting detail row:', err2);
+        return res.status(500).send('Error inserting details');
+      }
+      res.status(201).send('Item inserted successfully');
+    });
   });
 });
 

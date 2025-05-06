@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Community Listings</title>
@@ -16,14 +17,18 @@
       color: #333;
     }
 
-    .filter-section {
+    .filter-section,
+    .form-section {
       text-align: center;
       margin-bottom: 20px;
     }
 
-    .filter-section select {
+    .filter-section select,
+    .form-section select,
+    .form-section input {
       font-size: 1em;
-      padding: 5px 10px;
+      padding: 6px;
+      margin: 5px;
     }
 
     .catalog {
@@ -52,20 +57,10 @@
       font-weight: bold;
     }
 
-    .item-description {
+    .item-detail {
       font-size: 0.95em;
       color: #444;
-      margin-bottom: 10px;
-    }
-
-    .item-location,
-    .item-date,
-    .item-eventdate,
-    .item-cost,
-    .item-phone,
-    .item-email {
-      font-size: 0.85em;
-      color: #777;
+      margin-bottom: 5px;
     }
 
     .no-items {
@@ -74,8 +69,16 @@
       color: #888;
       margin-top: 50px;
     }
+
+    #listing-form {
+      display: none;
+    }
   </style>
 </head>
+<div style="text-align: center; margin-bottom: 1rem;">
+  <button id="auth-btn">Login</button>
+</div>
+
 <body>
 
   <h1>Community Listings</h1>
@@ -83,13 +86,35 @@
   <div class="filter-section">
     <label for="category-select">Filter by Category:</label>
     <select id="category-select">
-      <option>All</option>
-      <option>Activities</option>
-      <option>Artists</option>
-      <option>Classes</option>
-      <option>Events</option>
-      <option>Volunteers</option>
+      <option value="All">All</option>
+      <option value="activities">Activities</option>
+      <option value="artists">Artists</option>
+      <option value="classes">Classes</option>
+      <option value="events">Events</option>
+      <option value="volunteers">Volunteers</option>
     </select>
+  </div>
+
+  <div class="form-section">
+    <button id="toggle-form-btn" style="display: none;">Add New Listing</button>
+    <form id="listing-form">
+      <h2>Create a New Listing</h2>
+      <select name="category" id="form-category" required>
+        <option value="">Select Category</option>
+        <option value="activities">Activities</option>
+        <option value="artists">Artists</option>
+        <option value="classes">Classes</option>
+        <option value="events">Events</option>
+        <option value="volunteers">Volunteers</option>
+      </select><br>
+      <input type="text" name="title" placeholder="Title" required />
+      <input type="text" name="location" placeholder="Location" required />
+      <input type="text" name="contact_email" placeholder="Contact Email" required />
+      <input type="text" name="phone" placeholder="Phone" required />
+      <input type="text" name="description" placeholder="Description" required /><br>
+      <div id="category-details"></div>
+      <button type="submit">Submit Listing</button>
+    </form>
   </div>
 
   <div class="catalog" id="catalog"></div>
@@ -97,8 +122,108 @@
   <script>
     const catalog = document.getElementById('catalog');
     const categorySelect = document.getElementById('category-select');
+    const form = document.getElementById('listing-form');
+    const formCategory = document.getElementById('form-category');
+    const categoryDetails = document.getElementById('category-details');
+    const toggleFormBtn = document.getElementById('toggle-form-btn');
+    const authBtn = document.getElementById('auth-btn');
 
-    function loadCommunityItems(category = 'All') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('user')) {
+        authBtn.textContent = 'Logout';
+        authBtn.onclick = () => {
+          localStorage.removeItem('user');
+          location.reload();
+        };
+      } else {
+        authBtn.textContent = 'Login';
+        authBtn.onclick = () => {
+          window.location.href = 'login.html';
+        };
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('user')) {
+        toggleFormBtn.style.display = 'inline-block';
+      } else {
+        toggleFormBtn.style.display = 'none';
+      }
+    });
+
+    const categoryFields = {
+      'activities': ['date','age_group','cost'],
+      'artists': ['pay', 'needed_by', 'experience_level'],
+      'classes': ['itinerary','duration','cost'],
+      'events': ['date','time','cost'],
+      'volunteers': ['date','time','requirements']
+    };
+
+    toggleFormBtn.addEventListener('click', () => {
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+
+    function formatKey(key) {
+      return key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    function renderCategoryInputs(category) {
+      categoryDetails.innerHTML = '';
+      const fields = categoryFields[category] || [];
+      fields.forEach(field => {
+        const input = document.createElement('input');
+        input.name = field;
+        input.placeholder = formatKey(field);
+        input.required = true;
+        input.type = 'text';
+        categoryDetails.appendChild(input);
+      });
+    }
+
+    formCategory.addEventListener('change', () => {
+      renderCategoryInputs(formCategory.value);
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const details = {};
+      const category = formData.get('category');
+
+      (categoryFields[category] || []).forEach(field => {
+        details[field] = formData.get(field);
+      });
+
+      const payload = {
+        category,
+        title: formData.get('title'),
+        location: formData.get('location'),
+        contact_email: formData.get('contact_email'),
+        phone: formData.get('phone'),
+        description: formData.get('description'),
+        details
+      };
+
+      fetch('http://localhost:3000/api/community', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to submit');
+          form.reset();
+          categoryDetails.innerHTML = '';
+          form.style.display = 'none';
+          loadItems('All');
+          alert('Listing submitted successfully!');
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Error submitting listing.');
+        });
+    });
+
+    function loadItems(category) {
       const url = category === 'All'
         ? 'http://localhost:3000/api/community'
         : `http://localhost:3000/api/community?category=${encodeURIComponent(category)}`;
@@ -106,9 +231,8 @@
       fetch(url)
         .then(response => response.json())
         .then(data => {
-          catalog.innerHTML = ''; // Clear previous items
-
-          if (data.length === 0) {
+          catalog.innerHTML = '';
+          if (!data || data.length === 0) {
             catalog.innerHTML = '<p class="no-items">No items found in this category.</p>';
             return;
           }
@@ -116,34 +240,45 @@
           data.forEach(item => {
             const card = document.createElement('div');
             card.className = 'item-card';
-            card.innerHTML = `
+
+            let details = {};
+            try {
+              details = typeof item.details === 'string' ? JSON.parse(item.details) : item.details;
+            } catch (e) {
+              console.warn('Invalid JSON in details:', item.details);
+            }
+
+            let cardHTML = `
               <div class="item-title">${item.title}</div>
-              <div class="item-description">${item.description}</div>
-              <div class="item-location">Location: ${item.location}</div>
-              <div class="item-eventdate">Event Date: ${item.event_date}</div>
-              <div class="item-cost">Cost: ${item.cost}</div>
-              <div class="item-email">Contact Email: ${item.contact_email}</div>
-              <div class="item-phone">Contact Phone: ${item.phone}</div>
-              <div class="item-date">Posted: ${new Date(item.created_at).toLocaleDateString()}</div>
+              <div class="item-detail"><strong>Description:</strong> ${item.description}</div>
+              <div class="item-detail"><strong>Location:</strong> ${item.location}</div>
+              <div class="item-detail"><strong>Contact Email:</strong> ${item.contact_email}</div>
+              <div class="item-detail"><strong>Phone:</strong> ${item.phone}</div>
             `;
+
+            if (details && typeof details === 'object') {
+              for (const [key, value] of Object.entries(details)) {
+                cardHTML += `<div class="item-detail"><strong>${formatKey(key)}:</strong> ${value}</div>`;
+              }
+            }
+
+            card.innerHTML = cardHTML;
             catalog.appendChild(card);
           });
         })
         .catch(error => {
           console.error('Error loading community items:', error);
-          catalog.innerHTML = '<p class="no-items">Error loading items. Try again later.</p>';
+          catalog.innerHTML = '<p class="no-items">Error loading listings. Try again later.</p>';
         });
     }
 
-    // Initial load
-    loadCommunityItems();
-
-    // Reload on category change
     categorySelect.addEventListener('change', () => {
-      const selectedCategory = categorySelect.value;
-      loadCommunityItems(selectedCategory);
+      loadItems(categorySelect.value);
     });
+
+    loadItems(categorySelect.value);
   </script>
 
 </body>
+
 </html>
