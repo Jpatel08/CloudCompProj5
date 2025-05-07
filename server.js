@@ -463,7 +463,7 @@ app.get('/api/housing', (req, res) => {
     if (err) return res.status(500).send('Error fetching base items');
 
     const fetchDetails = (item, cb) => {
-      const id = item.item_id;
+      const id = item.id;
       const cat = item.category;
 
       const detailTables = {
@@ -498,11 +498,8 @@ app.get('/api/housing', (req, res) => {
 
 app.post('/api/housing', (req, res) => {
   let {
-    category,
-    type, 
-    location, 
-    city, 
-    phone
+    category, type, location, city, phone, 
+    details
   } = req.body;
 
   if (!category || !details || typeof details !== 'object') {
@@ -510,7 +507,7 @@ app.post('/api/housing', (req, res) => {
     return res.status(400).send('Missing category or details');
   }
 
-  const insertMain = `INSERT INTO community_items
+  const insertMain = `INSERT INTO housing_items
     (category, type, location, city, phone)
     VALUES (?, ?, ?, ?, ?)`;
 
