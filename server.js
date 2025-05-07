@@ -458,7 +458,6 @@ app.get('/api/housing', (req, res) => {
     baseQuery += ' WHERE category = ?';
     params.push(category);
   }
-  baseQuery += ' ORDER BY created_at DESC';
 
   connection.query(baseQuery, params, (err, items) => {
     if (err) return res.status(500).send('Error fetching base items');

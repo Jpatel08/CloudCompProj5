@@ -150,11 +150,11 @@
     });
 
     const categoryFields = {
-      'apartments': ['Rent','Square-Footage','Pets','Laundry','Parking','property_condition'],
-      'rooms': ['Rent','Square-Footage','Furnished','Utilities Included','Parking','Roommates'],
-      'sublets': ['Rent','Lease Length','Furnished','Utilities Included','Available From','property_condition'],
-      'vacation': ['Price per Night','Bedrooms','Baths','Max Guests','WiFi','Parking'],
-      'realestate': ['Price','Bedrooms','Baths','Square-Footage','Lot Size','HOA Fees','Garage','property_condition']
+      'apartments': ['rent', 'square_footage', 'pets', 'laundry', 'parking', 'property_condition'],
+      'rooms': ['rent', 'square_footage', 'furnished', 'utilities_included', 'parking', 'roommates'],
+      'sublets': ['rent', 'lease_length', 'furnished', 'utilities_included', 'available_from', 'property_condition'],
+      'vacation': ['price_per_night', 'bedrooms', 'baths', 'max_guests', 'wifi', 'parking'],
+      'realestate': ['price', 'bedrooms', 'baths', 'square_footage', 'lot_size', 'hoa_fees', 'garage', 'property_condition']
 };
 
 
@@ -247,7 +247,7 @@
             }
 
             let cardHTML = `
-              <div class="item-detail"><strong>Price:</strong> $${item.type}</div>
+              <div class="item-detail"><strong>Type:</strong> ${item.type}</div>
               <div class="item-detail"><strong>City:</strong> ${item.city}</div>
               <div class="item-detail"><strong>Location:</strong> ${item.location}</div>
               <div class="item-detail"><strong>Phone:</strong> ${item.phone}</div>
