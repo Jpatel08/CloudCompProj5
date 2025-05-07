@@ -79,7 +79,6 @@ app.post('/api/login', (req, res) => {
 });
 
 
-
 app.get('/api/community', (req, res) => {
   const category = req.query.category;
   let baseQuery = `SELECT * FROM community_items`;
@@ -198,28 +197,6 @@ app.post('/api/community', (req, res) => {
   });
 });
 
-app.get('/api/housing', (req, res) => {
-  const category = req.query.category;
-  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM housing_items';
-  let params = [];
-
-  if (category && category !== 'All') {
-    sql += ' WHERE category = ?';
-    params.push(category);
-  }
-
-  sql += ' ORDER BY created_at DESC';
-
-  connection.query(sql, params, (err, results) => {
-    if (err) {
-      console.error('Error fetching housing items:', err);
-      res.status(500).send('Database error');
-    } else {
-      res.json(results);
-    }
-  });
-});
-
 app.get('/api/job', (req, res) => {
   const category = req.query.category;
   let sql = `
@@ -289,8 +266,6 @@ app.post('/api/job', (req, res) => {
     res.status(201).json({ success: true, id: result.insertId });
   });
 });
-
-
 
 app.get('/api/forsale', (req, res) => {
   const category = req.query.category;
@@ -419,8 +394,6 @@ app.post('/api/forsale', (req, res) => {
   });
 });
 
-
-
 app.get('/api/service', (req, res) => {
   const category = req.query.category;
   let sql = 'SELECT item_id, category, service_name, rates, licensed, insured, city, phone, details, created_at FROM service_items';
@@ -477,6 +450,83 @@ app.post('/api/service', (req, res) => {
   });
 });
 
+app.get('/api/housing', (req, res) => {
+  const category = req.query.category;
+  let baseQuery = `SELECT * FROM housing_items`;
+  let params = [];
+  if (category && category !== 'All') {
+    baseQuery += ' WHERE category = ?';
+    params.push(category);
+  }
+  baseQuery += ' ORDER BY created_at DESC';
+
+  connection.query(baseQuery, params, (err, items) => {
+    if (err) return res.status(500).send('Error fetching base items');
+
+    const fetchDetails = (item, cb) => {
+      const id = item.item_id;
+      const cat = item.category;
+
+      const detailTables = {
+        'apartments': 'housing_apartments',
+        'rooms': 'housing_rooms',
+        'sublets': 'housing_sublets',
+        'vacation': 'housing_vacation',
+        'realestate': 'housing_realestate'
+      };
+
+      const table = detailTables[cat];
+      if (!table) return cb(null, item);
+
+      connection.query(`SELECT * FROM ${table} WHERE item_id = ?`, [id], (err, rows) => {
+        if (err || rows.length === 0) {
+          item.details = {};
+        } else {
+          const { item_id, ...details } = rows[0];
+          item.details = details;
+        }
+        cb(null, item);
+      });
+    };
+
+    const async = require('async');
+    async.map(items, fetchDetails, (err, enriched) => {
+      if (err) return res.status(500).send('Error enriching items');
+      res.json(enriched);
+    });
+  });
+});
+
+app.post('/api/housing', (req, res) => {
+  const {
+    category,
+    type, 
+    location, 
+    city, 
+    phone
+  } = req.body;
+
+  if (!category || !type || !location || !city || !phone) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  const sql = `
+    INSERT INTO housing_items 
+    (category, type, location, city, phone, created_at)
+    VALUES (?, ?, ?, ?, ?, NOW())
+  `;
+
+  const params = [category, type, city, phone];
+
+  connection.query(sql, params, (err, result) => {
+    if (err) {
+      console.error('Error inserting service listing:', err);
+      return res.status(500).send('Database insert error');
+    }
+
+    res.status(201).json({ success: true, id: result.insertId });
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
@@ -484,12 +534,6 @@ app.listen(PORT, () => {
 
 app.get('/api/forsale', (req, res) => {
   connection.query('SELECT * FROM for_sale_items', (err, results) => {
-    res.json(results);
-  });
-});
-
-app.get('/api/housing', (req, res) => {
-  connection.query('SELECT * FROM housing_items', (err, results) => {
     res.json(results);
   });
 });
@@ -511,3 +555,10 @@ app.get('/api/community', (req, res) => {
     res.json(results);
   });
 });
+
+app.get('/api/housing', (req, res) => {
+  connection.query('SELECT * FROM housing_items', (err, results) => {
+    res.json(results);
+  });
+});
+

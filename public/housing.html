@@ -88,10 +88,10 @@
     <select id="category-select">
       <option value="All">All</option>
       <option value="apartments">Apartments</option>
-      <option value="rooms/shared">Rooms/Shared</option>
+      <option value="rooms">Rooms/Shared</option>
       <option value="sublets">Sublets</option>
-      <option value="vacation rentals">Vacation Rentals</option>
-      <option value="real estate for sale">Real Estate for Sale</option>
+      <option value="vacation">Vacation Rentals</option>
+      <option value="realestate">Real Estate for Sale</option>
     </select>
   </div>
 
@@ -101,17 +101,15 @@
       <h2>Create a New Listing</h2>
       <select name="category" id="form-category" required>
         <option value="apartments">Apartments</option>
-        <option value="rooms/shared">Rooms/Shared</option>
+        <option value="rooms">Rooms/Shared</option>
         <option value="sublets">Sublets</option>
-        <option value="vacation rentals">Vacation Rentals</option>
-        <option value="real estate for sale">Real Estate for Sale</option>
+        <option value="vacation">Vacation Rentals</option>
+        <option value="realestate">Real Estate for Sale</option>
       </select><br>
-      <input type="text" name="title" placeholder="Title" required />
-      <input type="text" name="item_condition" placeholder="Condition" required />
-      <input type="number" name="price" placeholder="Price" required />
+      <input type="text" name="type" placeholder="Type" required />
       <input type="text" name="city" placeholder="City" required />
+      <input type="text" name="location" placeholder="Location" required /><br>
       <input type="text" name="phone" placeholder="Phone" required />
-      <input type="text" name="description" placeholder="Description" required /><br>
       <div id="category-details"></div>
       <button type="submit">Submit Listing</button>
     </form>
@@ -152,11 +150,11 @@
     });
 
     const categoryFields = {
-      'apartments': ['Type','Location','Rent','Square-Footage','Pets','Laundry','Parking','Condition','City','Phone'],
-      'rooms/shared': ['Type','Location','Rent','Square-Footage','Furnished','Utilities Included','Parking','Roommates','City','Phone'],
-      'sublets': ['Type','Location','Rent','Lease Length','Furnished','Utilities Included','Available From','Condition','City','Phone'],
-      'vacation rentals': ['Type','Location','Price per Night','Bedrooms','Baths','Max Guests','WiFi','Parking','Phone'],
-      'real estate for sale': ['Type','Location','Price','Bedrooms','Baths','Square-Footage','Lot Size','HOA Fees','Garage','Condition','City','Phone']
+      'apartments': ['Rent','Square-Footage','Pets','Laundry','Parking','property_condition'],
+      'rooms': ['Rent','Square-Footage','Furnished','Utilities Included','Parking','Roommates'],
+      'sublets': ['Rent','Lease Length','Furnished','Utilities Included','Available From','property_condition'],
+      'vacation': ['Price per Night','Bedrooms','Baths','Max Guests','WiFi','Parking'],
+      'realestate': ['Price','Bedrooms','Baths','Square-Footage','Lot Size','HOA Fees','Garage','property_condition']
 };
 
 
@@ -197,16 +195,14 @@
 
       const payload = {
         category,
-        title: formData.get('title'),
-        item_condition: formData.get('item_condition'),
-        price: parseFloat(formData.get('price')),
+        type: formData.get('type'),
+        location: formData.get('location'),
         city: formData.get('city'),
         phone: formData.get('phone'),
-        description: formData.get('description'),
         details
       };
 
-      fetch('http://localhost:3000/api/forsale', {
+      fetch('http://localhost:3000/api/housing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -227,8 +223,8 @@
 
     function loadItems(category) {
       const url = category === 'All'
-        ? 'http://localhost:3000/api/forsale'
-        : `http://localhost:3000/api/forsale?category=${encodeURIComponent(category)}`;
+        ? 'http://localhost:3000/api/housing'
+        : `http://localhost:3000/api/housing?category=${encodeURIComponent(category)}`;
 
       fetch(url)
         .then(response => response.json())
@@ -251,11 +247,9 @@
             }
 
             let cardHTML = `
-              <div class="item-title">${item.title}</div>
-              <div class="item-detail"><strong>Description:</strong> ${item.description}</div>
-              <div class="item-detail"><strong>Condition:</strong> ${item.item_condition}</div>
-              <div class="item-detail"><strong>Price:</strong> $${Number(item.price).toFixed(2)}</div>
+              <div class="item-detail"><strong>Price:</strong> $${item.type}</div>
               <div class="item-detail"><strong>City:</strong> ${item.city}</div>
+              <div class="item-detail"><strong>Location:</strong> ${item.location}</div>
               <div class="item-detail"><strong>Phone:</strong> ${item.phone}</div>
             `;
 
