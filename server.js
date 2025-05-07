@@ -136,7 +136,7 @@ app.post('/api/community', (req, res) => {
 
   const insertMain = `INSERT INTO community_items
     (category, title, location, contact_email, phone, description)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    VALUES (?, ?, ?, ?, ?, ?)`;
 
   const mainParams = [category, title, location, contact_email, phone, description];
 
