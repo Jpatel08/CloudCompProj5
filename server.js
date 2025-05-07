@@ -2,7 +2,7 @@ const session = require('express-session');
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
-
+require('dotenv').config();
 const app = express();
 
 app.use(session({
@@ -12,7 +12,10 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,12 +23,12 @@ app.use(express.json());
 
 // SQL connection settings
 const connection = mysql.createConnection({
-  host: '35.192.196.215',  // Use your public IP or 127.0.0.1 if using proxy
-  user: 'root',             // Change if you have a custom user
-  password: 'gaffartrippin',
-  database: 'classifieds',
-  connectTimeout: 5000
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 });
+
 
 // Test route
 app.get('/test-connection', (req, res) => {
