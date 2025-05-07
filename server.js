@@ -222,8 +222,12 @@ app.get('/api/housing', (req, res) => {
 
 app.get('/api/job', (req, res) => {
   const category = req.query.category;
-  let sql = 'SELECT item_id, title, description, location, event_date, cost, contact_email, phone, created_at, category FROM job_items';
-  let params = [];
+  let sql = `
+      SELECT item_id, category, job_title, company, job_type,
+             salary, location, remote_ok, description, created_at
+      FROM job_items
+  `;
+  const params = [];
 
   if (category && category !== 'All') {
     sql += ' WHERE category = ?';
@@ -235,12 +239,58 @@ app.get('/api/job', (req, res) => {
   connection.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching job items:', err);
-      res.status(500).send('Database error');
-    } else {
-      res.json(results);
+      return res.status(500).send('Database error');
     }
+    res.json(results);
   });
 });
+
+app.post('/api/job', (req, res) => {
+  const {
+    category,
+    job_title,
+    company,
+    job_type,
+    salary,
+    location,
+    remote_ok,
+    description
+  } = req.body;
+
+  /* ---- basic validation ------------------------------- */
+  if (!category || !job_title || !company || !job_type || !location || !description) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  /* ---- insert row ------------------------------------- */
+  const sql = `
+    INSERT INTO job_items
+      (category, job_title, company, job_type, salary,
+       location, remote_ok, description, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+  `;
+
+  const params = [
+    category,
+    job_title,
+    company,
+    job_type,
+    salary || null,
+    location,
+    remote_ok ? 1 : 0,    // coerce to 0/1 for MySQL TINYINT
+    description
+  ];
+
+  connection.query(sql, params, (err, result) => {
+    if (err) {
+      console.error('Error inserting job listing:', err);
+      return res.status(500).send('Database insert error');
+    }
+    res.status(201).json({ success: true, id: result.insertId });
+  });
+});
+
+
 
 app.get('/api/forsale', (req, res) => {
   const category = req.query.category;
