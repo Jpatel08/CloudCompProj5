@@ -497,7 +497,7 @@ app.get('/api/housing', (req, res) => {
 });
 
 app.post('/api/housing', (req, res) => {
-  const {
+  let {
     category,
     type, 
     location, 
@@ -505,25 +505,69 @@ app.post('/api/housing', (req, res) => {
     phone
   } = req.body;
 
-  if (!category || !type || !location || !city || !phone) {
-    return res.status(400).send('Missing required fields');
+  if (!category || !details || typeof details !== 'object') {
+    console.error('Missing or invalid data:', req.body);
+    return res.status(400).send('Missing category or details');
   }
 
-  const sql = `
-    INSERT INTO housing_items 
-    (category, type, location, city, phone, created_at)
-    VALUES (?, ?, ?, ?, ?, NOW())
-  `;
+  const insertMain = `INSERT INTO community_items
+    (category, type, location, city, phone)
+    VALUES (?, ?, ?, ?, ?)`;
 
-  const params = [category, type, city, phone];
+  const mainParams = [category, type, location, city, phone];
 
-  connection.query(sql, params, (err, result) => {
+  connection.query(insertMain, mainParams, (err, result) => {
     if (err) {
-      console.error('Error inserting service listing:', err);
-      return res.status(500).send('Database insert error');
+      console.error('Error inserting into housing_items:', err);
+      return res.status(500).send('Error inserting base item');
     }
 
-    res.status(201).json({ success: true, id: result.insertId });
+    const itemId = result.insertId;
+    let insertDetail = '', detailParams = [];
+
+    switch (category) {
+      case 'apartments':
+          insertDetail = `INSERT INTO apartments_housing (item_id, rent, square_footage, pets, laundry, parking, property_condition)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          detailParams = [itemId, details.rent, details.square_footage, details.pets, details.laundry, details.parking, details.property_condition];
+          break;
+      case 'rooms':
+          insertDetail = `INSERT INTO rooms_housing (item_id, rent, square_footage, furnished, utilities_included, parking, roommates)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          detailParams = [itemId, details.rent, details.square_footage, details.furnished, details.utilities_included, details.parking, details.roommates];
+          break;
+      case 'sublets':
+          insertDetail = `INSERT INTO sublets_housing (item_id, rent, lease_length, furnished, utilities_included, available_from, property_condition)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          detailParams = [itemId, details.rent, details.lease_length, details.furnished, details.utilities_included, details.available_from, details.property_condition];
+          break;
+      case 'vacation':
+          insertDetail = `INSERT INTO vacation_housing (item_id, price_per_night, bedrooms, baths, max_guests, wifi, parking)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          detailParams = [itemId, details.price_per_night, details.bedrooms, details.baths, details.max_guests, details.wifi, details.parking];
+          break;
+      case 'realestate':
+          insertDetail = `INSERT INTO realestate_housing (item_id, price, bedrooms, baths, square_footage, lot_size, hoa_fees, garage, property_condition)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+          detailParams = [itemId, details.price, details.bedrooms, details.baths, details.square_footage, details.lot_size, details.hoa_fees, details.garage, details.property_condition];
+          break;
+      default:
+        console.error('Unsupported category:', category);
+        return res.status(400).send('Unsupported category');
+    }
+
+    if (detailParams.includes(undefined)) {
+      console.error('Missing required detail values for category:', category, detailParams);
+      return res.status(400).send('Missing required detail fields');
+    }
+
+    connection.query(insertDetail, detailParams, (err2) => {
+      if (err2) {
+        console.error('Error inserting detail row:', err2);
+        return res.status(500).send('Error inserting details');
+      }
+      res.status(201).send('Item inserted successfully');
+    });
   });
 });
 
